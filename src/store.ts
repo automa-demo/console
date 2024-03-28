@@ -3,11 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { isProduction } from 'env';
 
-import { authReducer } from 'auth';
-
-export const reducer = combineSlices({
-  auth: authReducer,
-});
+export const reducer = combineSlices({});
 
 const store = configureStore({
   reducer,

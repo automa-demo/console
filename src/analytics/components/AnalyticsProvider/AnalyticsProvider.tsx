@@ -12,7 +12,7 @@ const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }) => {
   const [isInitialized, setIsInitialized] = useState(false);
   const [anonymousId, setAnonymousId] = useState<ID | null>(null);
 
-  const isAnalyticsEnabled = isProduction;
+  const isAnalyticsEnabled = true;
 
   const analytics = useMemo(() => {
     const analytics = new AnalyticsBrowser();

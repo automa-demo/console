@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { ApolloProvider } from '@apollo/client';
+import { ClerkProvider, MultisessionAppSupport } from '@clerk/clerk-react';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import * as Toast from '@radix-ui/react-toast';
 
@@ -25,22 +26,28 @@ loadFonts().then(() => {
 
   root.render(
     <React.StrictMode>
-      <AnalyticsProvider>
-        <ApolloProvider client={client}>
-          <Provider store={store}>
-            <BrowserRouter>
-              <Tooltip.Provider delayDuration={500}>
-                <Toast.Provider>
-                  <ErrorBoundary>
-                    <App />
-                  </ErrorBoundary>
-                  <Toast.Viewport />
-                </Toast.Provider>
-              </Tooltip.Provider>
-            </BrowserRouter>
-          </Provider>
-        </ApolloProvider>
-      </AnalyticsProvider>
+      <ClerkProvider
+        publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}
+      >
+        <MultisessionAppSupport>
+          <AnalyticsProvider>
+            <ApolloProvider client={client}>
+              <Provider store={store}>
+                <BrowserRouter>
+                  <Tooltip.Provider delayDuration={500}>
+                    <Toast.Provider>
+                      <ErrorBoundary>
+                        <App />
+                      </ErrorBoundary>
+                      <Toast.Viewport />
+                    </Toast.Provider>
+                  </Tooltip.Provider>
+                </BrowserRouter>
+              </Provider>
+            </ApolloProvider>
+          </AnalyticsProvider>{' '}
+        </MultisessionAppSupport>
+      </ClerkProvider>
     </React.StrictMode>,
   );
 });

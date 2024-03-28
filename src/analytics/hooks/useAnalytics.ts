@@ -1,14 +1,15 @@
 import { useCallback, useContext } from 'react';
 import { EventProperties } from '@segment/analytics-next';
+import { useUser, useAuth } from '@clerk/clerk-react';
 
 import { environment } from 'env';
 
-import { User, useUser } from 'auth';
-
 import AnalyticsContext from 'analytics/context';
 
+type User = NonNullable<ReturnType<typeof useUser>['user']>;
+
 const useAnalytics = () => {
-  const user = useUser();
+  const { orgId } = useAuth();
 
   const { analytics, anonymousId } = useContext(AnalyticsContext);
 
@@ -19,17 +20,19 @@ const useAnalytics = () => {
   }
 
   const identify = useCallback(
-    (user: User | null) => {
-      if (!user) {
+    (user: User | null | undefined, orgId: string | null | undefined) => {
+      if (!user || !orgId) {
         return;
       }
 
       analytics.identify(user.id, {
-        email: user.email,
+        email: user.emailAddresses.find(
+          (e) => e.emailAddress === user!.primaryEmailAddressId,
+        )?.emailAddress,
       });
 
       analytics.group(
-        user.org_id,
+        orgId,
         {},
         {
           integrations: {
@@ -48,10 +51,10 @@ const useAnalytics = () => {
         statsigEnvironment: {
           tier: environment,
         },
-        statsigCustomIDs: [...(user?.org_id ? ['orgID', user.org_id] : [])],
+        statsigCustomIDs: [...(orgId ? ['orgID', orgId] : [])],
       });
     },
-    [analytics, user],
+    [analytics, orgId],
   );
 
   return { anonymousId, identify, track };

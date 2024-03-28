@@ -1,13 +1,19 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {
+  SignIn,
+  OrganizationList,
+  OrganizationSwitcher,
+  UserButton,
+  useAuth,
+  useUser,
+} from '@clerk/clerk-react';
 import { StatsigProvider } from 'statsig-react';
 import axios from 'axios';
 
 import { environment, isTest } from 'env';
 
-import { Loader, RoutesLoader, useAsyncEffect } from 'shared';
+import { Loader, RoutesLoader } from 'shared';
 import { useAnalytics } from 'analytics';
-import { useAuth, useUser } from 'auth';
 
 import routes from './routes';
 
@@ -16,18 +22,15 @@ import { Container } from './App.styles';
 const App: React.FC<{}> = () => {
   const { anonymousId, identify } = useAnalytics();
 
-  const { setAuth, unsetAuth, setAuthLoading, authLoading } = useAuth();
-
-  const user = useUser();
-
-  const navigate = useNavigate();
+  const { orgId, isLoaded, signOut } = useAuth();
+  const { user } = useUser();
 
   useEffect(() => {
     const interceptor = axios.interceptors.response.use(
       (response) => response,
       (error) => {
         if (error.response.status === 401) {
-          unsetAuth();
+          signOut();
         }
 
         return Promise.reject(error);
@@ -35,38 +38,24 @@ const App: React.FC<{}> = () => {
     );
 
     return axios.interceptors.request.eject(interceptor);
-  }, [unsetAuth]);
-
-  useAsyncEffect(async () => {
-    try {
-      const { data } = await Promise.resolve({
-        data: {
-          id: 'fixme',
-          email: 'fixme',
-          org_id: 'fixme',
-        },
-      });
-
-      if (data) {
-        setAuth(data);
-      }
-    } catch (_) {}
-
-    setAuthLoading(false);
-  }, []);
+  }, [signOut]);
 
   useEffect(() => {
-    if (!user && !authLoading) {
-      navigate('/auth/login');
-    }
-  }, [user, authLoading, navigate]);
+    identify(user, orgId);
+  }, [identify, user, orgId]);
 
-  useEffect(() => {
-    identify(user);
-  }, [identify, user]);
+  if (!user && isLoaded) {
+    return <SignIn />;
+  }
+
+  if (!orgId && isLoaded) {
+    return <OrganizationList hidePersonal />;
+  }
 
   return (
     <Container>
+      <UserButton />
+      <OrganizationSwitcher hidePersonal />
       <StatsigProvider
         sdkKey={import.meta.env.VITE_STATSIG_KEY}
         waitForInitialization={isTest ? false : true}
@@ -84,15 +73,17 @@ const App: React.FC<{}> = () => {
         }}
         user={{
           userID: user?.id,
-          email: user?.email,
+          email: user?.primaryEmailAddress?.emailAddress
+            ? user.primaryEmailAddress.emailAddress
+            : undefined,
           customIDs: {
             ...(user && {
-              orgID: user.org_id,
+              orgID: orgId ? orgId : undefined,
             }),
           },
         }}
       >
-        {!authLoading && <RoutesLoader fallback={<Loader />} routes={routes} />}
+        {isLoaded && <RoutesLoader fallback={<Loader />} routes={routes} />}
       </StatsigProvider>
     </Container>
   );
