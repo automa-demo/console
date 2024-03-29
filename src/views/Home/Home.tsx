@@ -14,10 +14,14 @@ const Home: React.FC<HomeProps> = ({ ...props }) => {
     track('Home Clicked', { a: 1, b: { c: 2, name: 3, d: { what: 4 } } });
   };
 
+  const error = () => {
+    throw new Error('This is an error');
+  };
+
   const isAutomaEmailEnabled = useGate('automa_email');
 
   const orgNameExperiment = useExperiment('experiment_org');
-  const showOrgName = orgNameExperiment.get('show_org_name', false);
+  const showOrgName = orgNameExperiment.get<boolean>('show_org_name', false);
 
   return (
     <Container {...props}>
@@ -26,6 +30,9 @@ const Home: React.FC<HomeProps> = ({ ...props }) => {
           {isAutomaEmailEnabled ? "Our best customer's" : ''}
           {showOrgName ? 'Org Name' : 'Home'}
         </Flex>
+        <div onClick={error} onKeyDown={error} role="button" tabIndex={0}>
+          Error
+        </div>
       </Flex>
     </Container>
   );
