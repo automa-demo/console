@@ -15,11 +15,8 @@ import { isProduction } from 'env';
 import { errorCapture } from 'error';
 
 import { toast } from 'shared';
-import { logout } from 'auth';
 
 const logoutOn401 = async () => {
-  await logout();
-
   toast({
     title: 'You are not logged in.',
     variant: 'error',
