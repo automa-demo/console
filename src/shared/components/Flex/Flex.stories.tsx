@@ -1,6 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { expect } from '@storybook/jest';
-import { userEvent, within } from '@storybook/testing-library';
+import { within, userEvent, expect, fn } from '@storybook/test';
 
 import Flex from './Flex';
 import { FlexComponentProps } from './types';
@@ -15,11 +14,7 @@ const meta = {
         <div>Two</div>
       </>
     ),
-  },
-  argTypes: {
-    onClick: {
-      action: true,
-    },
+    onClick: fn(),
   },
 } satisfies Meta<FlexComponentProps>;
 
@@ -48,9 +43,21 @@ export const AlignItems = {
   },
 } satisfies Story;
 
+export const Element = {
+  args: {
+    element: 'nav',
+  },
+} satisfies Story;
+
 export const Inline = {
   args: {
     inline: true,
+  },
+} satisfies Story;
+
+export const FullWidth = {
+  args: {
+    fullWidth: true,
   },
 } satisfies Story;
 

@@ -39,6 +39,7 @@ module.exports = {
       },
     ],
     'storybook/no-uninstalled-addons': 'off',
+    'tailwindcss/no-custom-classname': 'off',
     'tailwindcss/classnames-order': 'off',
     'tailwindcss/enforces-negative-arbitrary-values': 'error',
     'tailwindcss/enforces-shorthand': 'error',
@@ -46,7 +47,6 @@ module.exports = {
   },
   ignorePatterns: [
     '!.storybook',
-    '!.babel-plugin-macrosrc.js',
     '!.lintstagedrc.js',
     '!.prettierrc.js',
     'build',
@@ -69,11 +69,10 @@ module.exports = {
     {
       files: [
         '.storybook/*.ts',
-        '.babel-plugin-macrosrc.js',
         '.eslintrc.js',
         '.lintstagedrc.js',
         '.prettierrc.js',
-        'generate-graphql.ts',
+        'graphql-codegen.ts',
         'postcss.config.js',
         'tailwind.config.ts',
         'vite.config.mts',

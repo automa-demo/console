@@ -5,6 +5,12 @@
   "dependencies": {
     "@apollo/client": "~3.7.5",
     "@clerk/clerk-react": "~4.30.7",
+    "@hookform/resolvers": "~3.3.4",
+    "@phosphor-icons/react": "~2.1.5",
+    "@radix-ui/react-avatar": "~1.0.4",
+    "@radix-ui/react-dialog": "~1.0.5",
+    "@radix-ui/react-dropdown-menu": "~2.0.6",
+    "@radix-ui/react-label": "~2.0.2",
     "@radix-ui/react-toast": "~1.1.1",
     "@radix-ui/react-tooltip": "~1.0.2",
     "@reduxjs/toolkit": "~2.1.0",
@@ -20,13 +26,15 @@
     "react": "~18.2.0",
     "react-dom": "~18.2.0",
     "react-error-boundary": "~4.0.11",
+    "react-hook-form": "~7.51.3",
     "react-redux": "~9.1.0",
     "react-responsive": "~9.0.2",
     "react-router-dom": "~6.0.2",
     "react-twc": "~1.4.1",
     "reset-css": "~5.0.1",
     "statsig-react": "~1.30.1",
-    "tailwind-merge": "~2.2.1"
+    "tailwind-merge": "~2.2.1",
+    "use-local-storage-state": "~19.2.0"
   },
   "scripts": {
     "build": "vite build",
@@ -34,7 +42,7 @@
     "build-stats": "BUILD_STATS=1 pnpm build",
     "format": "prettier --write .",
     "format-check": "prettier --check .",
-    "generate-graphql": "graphql-codegen --config generate-graphql.ts",
+    "graphql-generate": "graphql-codegen --config graphql-codegen.ts",
     "lint": "eslint .",
     "lint-fix": "eslint --fix .",
     "start": "vite",
@@ -48,7 +56,7 @@
     "update-boilerplate": "git pull --no-rebase https://git.sr.ht/~pksunkara/frontend-react master"
   },
   "engines": {
-    "node": ">=18.15.0"
+    "node": ">=20.12.0"
   },
   "browserslist": {
     "production": [
@@ -68,22 +76,21 @@
   "devDependencies": {
     "@graphql-codegen/cli": "~5.0.0",
     "@graphql-codegen/client-preset": "~4.1.0",
-    "@storybook/addon-coverage": "~0.0.9",
-    "@storybook/addon-essentials": "~7.5.2",
-    "@storybook/addon-interactions": "~7.5.2",
-    "@storybook/addon-links": "~7.5.2",
-    "@storybook/addon-themes": "~7.5.2",
-    "@storybook/jest": "~0.2.3",
-    "@storybook/node-logger": "~7.5.2",
-    "@storybook/react": "~7.5.2",
-    "@storybook/react-vite": "~7.5.2",
-    "@storybook/test-runner": "~0.14.0",
-    "@storybook/testing-library": "~0.2.2",
+    "@storybook/addon-coverage": "~1.0.3",
+    "@storybook/addon-essentials": "~8.1.1",
+    "@storybook/addon-interactions": "~8.1.1",
+    "@storybook/addon-links": "~8.1.1",
+    "@storybook/addon-themes": "~8.1.1",
+    "@storybook/node-logger": "~8.1.1",
+    "@storybook/react": "~8.1.1",
+    "@storybook/react-vite": "~8.1.1",
+    "@storybook/test": "~8.1.1",
+    "@storybook/test-runner": "~0.18.0",
     "@testing-library/jest-dom": "~6.1.4",
     "@testing-library/react": "~14.1.0",
     "@testing-library/user-event": "~14.5.1",
     "@types/fontfaceobserver": "~2.1.0",
-    "@types/node": "~18.16.19",
+    "@types/node": "~20.12.7",
     "@types/react": "~18.2.37",
     "@types/react-dom": "~18.2.15",
     "@types/react-router-dom": "~5.3.3",
@@ -100,7 +107,7 @@
     "eslint-plugin-prettier": "~5.0.0",
     "eslint-plugin-react": "~7.32.2",
     "eslint-plugin-react-hooks": "~4.6.0",
-    "eslint-plugin-storybook": "~0.6.12",
+    "eslint-plugin-storybook": "~0.8.0",
     "eslint-plugin-tailwindcss": "~3.14.2",
     "jsdom": "~22.1.0",
     "postcss": "~8.4.25",
@@ -109,9 +116,10 @@
     "rollup-plugin-webpack-stats": "~0.2.3",
     "sharp": "~0.32.1",
     "source-map-explorer": "~2.5.2",
-    "storybook": "~7.5.2",
+    "storybook": "~8.1.1",
     "svgo": "~3.0.2",
     "tailwindcss": "~3.4.1",
+    "tailwindcss-animate": "~1.0.7",
     "typescript": "~5.2.2",
     "vite": "~5.0.11",
     "vite-plugin-babel-macros": "~1.0.6",
@@ -119,7 +127,6 @@
     "vite-plugin-image-optimizer": "~1.1.7",
     "vite-plugin-svgr": "~4.2.0",
     "vite-tsconfig-paths": "~4.3.1",
-    "vitest": "~1.2.1",
-    "vitest-fetch-mock": "~0.2.2"
+    "vitest": "~1.2.1"
   }
 }

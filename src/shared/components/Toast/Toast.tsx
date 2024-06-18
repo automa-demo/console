@@ -1,36 +1,59 @@
 import React from 'react';
+import * as ToastPrimitive from '@radix-ui/react-toast';
+
+import { useToast } from './utils';
 
 import { ToastComponentProps } from './types';
 
-import { Container, Title, Description, Action, Close } from './Toast.styles';
+import {
+  Container,
+  Title,
+  Description,
+  Action,
+  Close,
+  Viewport,
+} from './Toast.styles';
 
-const Toast: React.FC<ToastComponentProps> = ({
+export const Toast: React.FC<ToastComponentProps> = ({
   type,
   duration,
   variant,
-  children,
+  title,
   description,
   action,
   close,
 }) => {
   return (
     <Container type={type} duration={duration} $variant={variant}>
-      <Title $variant={variant}>{children}</Title>
+      <Title $variant={variant}>{title}</Title>
       {!!description && (
-        <Description $variant={variant}>{description()}</Description>
+        <Description $variant={variant}>{description}</Description>
       )}
       {!!action && (
         <Action asChild $variant={variant} altText={action.altText}>
-          {action.cta()}
+          {action.cta}
         </Action>
       )}
       {!!close && (
         <Close asChild $variant={variant}>
-          {close()}
+          {close}
         </Close>
       )}
     </Container>
   );
 };
 
-export default Toast;
+const Toasts = () => {
+  const { toasts } = useToast();
+
+  return (
+    <ToastPrimitive.Provider>
+      {toasts.map(({ id, ...toast }) => (
+        <Toast key={id} {...toast} />
+      ))}
+      <Viewport />
+    </ToastPrimitive.Provider>
+  );
+};
+
+export default Toasts;

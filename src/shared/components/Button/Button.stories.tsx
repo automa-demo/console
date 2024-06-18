@@ -1,6 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { expect } from '@storybook/jest';
-import { userEvent, within } from '@storybook/testing-library';
+import { within, userEvent, expect, fn } from '@storybook/test';
 
 import Button from './Button';
 import { ButtonComponentProps } from './types';
@@ -10,11 +9,7 @@ const meta = {
   component: Button,
   args: {
     children: 'One',
-  },
-  argTypes: {
-    onClick: {
-      action: true,
-    },
+    onClick: fn(),
   },
 } satisfies Meta<ButtonComponentProps>;
 
@@ -23,6 +18,18 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default = {} satisfies Story;
+
+export const Link = {
+  args: {
+    to: '/',
+  },
+} satisfies Story;
+
+export const Anchor = {
+  args: {
+    href: 'https://google.com',
+  },
+} satisfies Story;
 
 export const Disabled = {
   args: {

@@ -17,14 +17,17 @@ if (isSentryEnabled) {
   });
 }
 
-export const errorCapture = (error: Error) => {
+export const errorCapture = (
+  error: Error,
+  context?: Record<string, unknown>,
+) => {
   if (isSentryEnabled) {
     withScope((scope) => {
-      scope.setExtra('error', { message: error.message });
+      scope.setContext('error', { message: error.message, ...context });
       captureException(error);
     });
   } else {
-    console.error(error);
+    console.error(error, context);
   }
 };
 

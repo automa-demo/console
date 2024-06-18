@@ -7,7 +7,7 @@ import { HomeProps } from './types';
 
 import { Container } from './Home.styles';
 
-const Home: React.FC<HomeProps> = ({ ...props }) => {
+const Home: React.FC<HomeProps> = () => {
   const { track } = useAnalytics();
 
   const click = () => {
@@ -24,7 +24,7 @@ const Home: React.FC<HomeProps> = ({ ...props }) => {
   const showOrgName = orgNameExperiment.get<boolean>('show_org_name', false);
 
   return (
-    <Container {...props}>
+    <Container>
       <Flex direction="column" alignItems="center" className="gap-2">
         <Flex className="pb-4" onClick={click}>
           {isAutomaEmailEnabled ? "Our best customer's" : ''}
