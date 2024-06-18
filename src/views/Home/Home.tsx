@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import { Flex, useExperiment, useGate } from 'shared';
 import { useAnalytics } from 'analytics';
@@ -33,6 +34,12 @@ const Home: React.FC<HomeProps> = () => {
         <div onClick={error} onKeyDown={error} role="button" tabIndex={0}>
           Error
         </div>
+        <Link to="/second">Second</Link>
+        <Link to="/third/one">Third: One</Link>
+        <Link to="/third/two">Third: Two</Link>
+        <Link to="/first/alpha">First: Alpha</Link>
+        <Link to="/first/beta/one">First: Beta: One</Link>
+        <Link to="/first/beta/two">First: Beta: Two</Link>
       </Flex>
     </Container>
   );

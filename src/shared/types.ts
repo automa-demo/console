@@ -1,8 +1,13 @@
-import { LazyExoticComponent, ReactElement } from 'react';
+import { FC, LazyExoticComponent } from 'react';
 
-export interface Route {
-  Component: LazyExoticComponent<() => ReactElement>;
+export type Route = {
+  Component: LazyExoticComponent<FC<any>>;
   path: string;
-  props: any;
+  children?: Route[];
+  handle?: {
+    category?: string;
+    name?: string;
+  };
+  props?: any;
   gate?: string;
-}
+};

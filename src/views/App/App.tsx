@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   SignIn,
   OrganizationList,
@@ -83,6 +84,7 @@ const App: React.FC<{}> = () => {
           },
         }}
       >
+        <Link to="/">Home</Link>
         {isLoaded && <RoutesLoader fallback={<Loader />} routes={routes} />}
       </StatsigProvider>
     </Container>

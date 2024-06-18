@@ -57,7 +57,20 @@ const useAnalytics = () => {
     [analytics, orgId],
   );
 
-  return { anonymousId, identify, track };
+  const page = useCallback(
+    (category?: string, name?: string, properties: EventProperties = {}) => {
+      analytics.page(category, name, {
+        ...properties,
+        statsigEnvironment: {
+          tier: environment,
+        },
+        statsigCustomIDs: [...(orgId ? ['orgID', orgId] : [])],
+      });
+    },
+    [analytics, orgId],
+  );
+
+  return { anonymousId, identify, track, page };
 };
 
 export default useAnalytics;

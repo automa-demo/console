@@ -43,7 +43,7 @@ loadFonts().then(() => {
                 </BrowserRouter>
               </StoreProvider>
             </ApolloProvider>
-          </AnalyticsProvider>{' '}
+          </AnalyticsProvider>
         </MultisessionAppSupport>
       </ClerkProvider>
     </React.StrictMode>,
