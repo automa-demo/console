@@ -4,16 +4,18 @@ import {
   HttpLink,
   InMemoryCache,
 } from '@apollo/client';
+import { onError } from '@apollo/client/link/error';
 import { createPersistedQueryLink } from '@apollo/client/link/persisted-queries';
 import { RetryLink } from '@apollo/client/link/retry';
-import { onError } from '@apollo/client/link/error';
-import { print } from 'graphql';
-import { sha256 } from 'crypto-hash';
 import axios from 'axios';
+import { sha256 } from 'crypto-hash';
+import { print } from 'graphql';
 
 import { isProduction } from 'env';
+
 import { errorCapture } from 'error';
 
+import { possibleTypes } from 'gql/possibleTypes.json';
 import { toast } from 'shared';
 
 const logoutOn401 = async () => {
@@ -47,7 +49,7 @@ const badErrorCodes = [
   'OPERATION_RESOLUTION_FAILURE',
 ];
 
-const ignoredErrorCodes = ['PERSISTED_QUERY_NOT_FOUND'];
+const ignoredErrorCodes = ['PERSISTED_QUERY_NOT_FOUND', 'NOT_FOUND'];
 
 const errorLink = onError(
   ({ graphQLErrors, networkError, operation: { query, variables } }) => {
@@ -84,7 +86,9 @@ const errorLink = onError(
   },
 );
 
-export const cache = new InMemoryCache();
+export const cache = new InMemoryCache({
+  possibleTypes,
+});
 
 const client = new ApolloClient({
   link: ApolloLink.from([persistedQueryLink, errorLink, retryLink, httpLink]),

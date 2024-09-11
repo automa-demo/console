@@ -1,4 +1,4 @@
-import type { Config } from 'tailwindcss';
+import { Config } from 'tailwindcss';
 import animate from 'tailwindcss-animate';
 
 const config: Config = {
@@ -6,6 +6,10 @@ const config: Config = {
   darkMode: 'class',
   theme: {
     extend: {
+      data: {
+        on: 'state="on"',
+        off: 'state="off"',
+      },
       fontSize: {
         '2xs': '0.625rem',
       },

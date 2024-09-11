@@ -1,17 +1,17 @@
 import React from 'react';
-import { Preview } from '@storybook/react';
-import { withThemeByClassName } from '@storybook/addon-themes';
-import { BrowserRouter } from 'react-router-dom';
 import { Provider as StoreProvider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider as ApolloProvider } from '@apollo/client/testing';
-import * as Tooltip from '@radix-ui/react-tooltip';
+import { withThemeByClassName } from '@storybook/addon-themes';
+import { Preview } from '@storybook/react';
 import * as Toast from '@radix-ui/react-toast';
+import * as Tooltip from '@radix-ui/react-tooltip';
 
 import '../src/index.css';
 
-import store, { reducer, RootState } from '../src/store';
+import { AnalyticsProvider } from '../src/analytics';
 import { cache } from '../src/client';
-
+import store, { reducer, RootState } from '../src/store';
 import { Container as AppContainer } from '../src/views/App/App.styles';
 
 const preview: Preview = {
@@ -33,20 +33,20 @@ const preview: Preview = {
       store.replaceReducer(reducer);
 
       return (
-        <ApolloProvider mocks={requests} cache={cache}>
-          <StoreProvider store={store}>
-            <BrowserRouter>
-              <Tooltip.Provider delayDuration={500}>
-                <Toast.Provider>
-                  <AppContainer>
-                    <Story />
-                  </AppContainer>
-                  <Toast.Viewport />
-                </Toast.Provider>
-              </Tooltip.Provider>
-            </BrowserRouter>
-          </StoreProvider>
-        </ApolloProvider>
+        <AnalyticsProvider>
+          <ApolloProvider mocks={requests} cache={cache}>
+            <StoreProvider store={store}>
+              <BrowserRouter>
+                <Tooltip.Provider delayDuration={500}>
+                  <Toast.Provider>
+                    <AppContainer>{Story()}</AppContainer>
+                    <Toast.Viewport />
+                  </Toast.Provider>
+                </Tooltip.Provider>
+              </BrowserRouter>
+            </StoreProvider>
+          </ApolloProvider>
+        </AnalyticsProvider>
       );
     },
   ],

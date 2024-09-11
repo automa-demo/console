@@ -1,8 +1,9 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { within, userEvent, expect, fn } from '@storybook/test';
+import { expect, fn, userEvent, within } from '@storybook/test';
+
+import { TypographyComponentProps } from './types';
 
 import Typography from './Typography';
-import { TypographyComponentProps } from './types';
 
 const meta = {
   title: 'Typography',
@@ -18,6 +19,24 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default = {} satisfies Story;
+
+export const Link = {
+  args: {
+    to: '/',
+  },
+} satisfies Story;
+
+export const Anchor = {
+  args: {
+    href: 'https://google.com',
+  },
+} satisfies Story;
+
+export const Disabled = {
+  args: {
+    disabled: true,
+  },
+} satisfies Story;
 
 export const Title1 = {
   args: {
@@ -115,12 +134,6 @@ export const Whitespace = {
     style: {
       width: '50px',
     },
-  },
-} satisfies Story;
-
-export const Link = {
-  args: {
-    link: true,
   },
 } satisfies Story;
 

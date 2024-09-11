@@ -1,15 +1,13 @@
 /// <reference types="vitest" />
 
 import { defineConfig } from 'vite';
-
+import { babelOptimizerPlugin } from '@graphql-codegen/client-preset';
 import react from '@vitejs/plugin-react';
 import { webpackStats } from 'rollup-plugin-webpack-stats';
-import macros from 'vite-plugin-babel-macros';
 import checker from 'vite-plugin-checker';
 import { ViteImageOptimizer as imageOptimizer } from 'vite-plugin-image-optimizer';
 import svgr from 'vite-plugin-svgr';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import { babelOptimizerPlugin } from '@graphql-codegen/client-preset';
 
 export default defineConfig({
   define: {
@@ -21,7 +19,6 @@ export default defineConfig({
   },
   plugins: [
     imageOptimizer(),
-    macros(),
     react({
       babel: {
         plugins: [
@@ -39,12 +36,6 @@ export default defineConfig({
     tsconfigPaths(),
     checker({
       typescript: true,
-      eslint: {
-        lintCommand: 'eslint .',
-        dev: {
-          logLevel: ['error'],
-        },
-      },
     }),
     process.env.BUILD_STATS ? webpackStats() : undefined,
   ],

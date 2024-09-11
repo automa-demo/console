@@ -1,3 +1,7 @@
+const product = 'frontend-react';
+const modules = ['analytics', 'shared', 'utils'];
+const features = ['auth'];
+
 module.exports = {
   root: true,
   extends: [
@@ -11,6 +15,8 @@ module.exports = {
     'plugin:storybook/recommended',
     'plugin:tailwindcss/recommended',
   ],
+  plugins: ['simple-import-sort'],
+  processor: '@graphql-eslint/graphql',
   rules: {
     'no-empty': [
       'error',
@@ -32,6 +38,43 @@ module.exports = {
       },
     ],
     'react/react-in-jsx-scope': 'off',
+    'simple-import-sort/imports': [
+      'warn',
+      {
+        groups: [
+          ['^\u0000'],
+          ['^node:'],
+          [
+            '^(react|react-dom/client|react-router-dom|react-redux|react-twc|vite|vitest)$',
+            '^(@apollo/client|@reduxjs/toolkit|@storybook|@testing-library|tailwindcss|class-variance-authority)(/.*)?$',
+            '^@?\\w',
+          ],
+          [`^@${product}/`],
+          ['^'],
+          ['^\u0000(@fontsource-.*)$'],
+          ['^.*\\.css$'],
+          ['^\u0000?(env|telemetry)$'],
+          ['^(client|error|store|theme|tests)$'],
+          [`^(gql(/.*)?|${modules.join('|')})$`],
+          [`^(${features.join('|')})$`],
+          ['^(assets|views)/.*'],
+          [`^(${modules.concat(features).join('|')})/.*$`],
+          ['^\\.\\.'],
+          ['^\\./(routes|types|utils)$'],
+          ['^\\.'],
+          ['^\\./.*\\.(queries|styles)$'],
+          ['^.*\\.stories'],
+        ],
+      },
+    ],
+    'import/no-empty-named-blocks': 'error',
+    'import/no-absolute-path': 'error',
+    'import/no-relative-packages': 'error',
+    'import/no-self-import': 'error',
+    'import/no-useless-path-segments': 'error',
+    'import/first': 'error',
+    'import/newline-after-import': 'error',
+    'import/no-duplicates': 'error',
     'import/no-cycle': [
       'error',
       {
@@ -55,6 +98,33 @@ module.exports = {
     'src/gql',
   ],
   overrides: [
+    {
+      files: ['**/*.graphql'],
+      extends: ['plugin:@graphql-eslint/operations-recommended'],
+      rules: {
+        '@graphql-eslint/naming-convention': [
+          'error',
+          {
+            VariableDefinition: 'snake_case',
+            OperationDefinition: {
+              style: 'PascalCase',
+              forbiddenPrefixes: ['Query', 'Mutation', 'Subscription', 'Get'],
+              forbiddenSuffixes: ['Query', 'Mutation', 'Subscription'],
+            },
+            FragmentDefinition: {
+              style: 'PascalCase',
+              forbiddenPrefixes: ['Fragment'],
+              forbiddenSuffixes: ['Fragment'],
+            },
+          },
+        ],
+        '@graphql-eslint/require-id-when-available': 'off',
+      },
+      parserOptions: {
+        operations: '**/*.queries.ts',
+        schema: '**/*.graphql',
+      },
+    },
     {
       files: ['**/*.stories.*'],
       rules: {
@@ -89,6 +159,6 @@ module.exports = {
     'import/resolver': {
       typescript: true,
     },
-    'import/internal-regex': '^@frontend-react/',
+    'import/internal-regex': `^@${product}/`,
   },
 };

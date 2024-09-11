@@ -1,7 +1,7 @@
 import { FC, LazyExoticComponent } from 'react';
 
 export type Route = {
-  Component: LazyExoticComponent<FC<any>>;
+  Component: FC<any> | LazyExoticComponent<FC<any>>;
   path: string;
   children?: Route[];
   handle?: {
