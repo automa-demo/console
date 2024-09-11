@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
   OrganizationList,
@@ -24,7 +24,27 @@ const App: React.FC<{}> = () => {
   const { updateOptimizerUser } = useOptimizerUser();
 
   const { orgId, isLoaded, signOut } = useAuth();
-  const { user } = useUser();
+  const { user: sessionUser } = useUser();
+
+  // Fix to make sure clerk user is not always reloaded
+  const user = useMemo(() => {
+    if (!sessionUser) {
+      return null;
+    }
+
+    sessionUser.externalAccounts.forEach((account) => {
+      if (account.verification) {
+        account.verification.expireAt = null;
+      }
+    });
+    sessionUser.emailAddresses.forEach(
+      (email) => (email.verification.expireAt = null),
+    );
+
+    return {
+      ...sessionUser,
+    };
+  }, [sessionUser]);
 
   useEffect(() => {
     const interceptor = axios.interceptors.response.use(

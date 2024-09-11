@@ -2,7 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { useAnalytics } from 'analytics';
-import { Flex, useExperiment, useGate } from 'shared';
+import { useExperiment, useGateValue } from 'optimizer';
+import { Flex } from 'shared';
 
 import { HomeProps } from './types';
 
@@ -19,7 +20,7 @@ const Home: React.FC<HomeProps> = () => {
     throw new Error('This is an error');
   };
 
-  const isAutomaEmailEnabled = useGate('automa_email');
+  const isAutomaEmailEnabled = useGateValue('automa_email');
 
   const orgNameExperiment = useExperiment('experiment_org');
   const showOrgName = orgNameExperiment.get<boolean>('show_org_name', false);
