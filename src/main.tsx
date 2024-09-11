@@ -17,6 +17,7 @@ import store from 'store';
 import { loadFonts } from 'theme';
 
 import { AnalyticsProvider } from 'analytics';
+import { OptimizerProvider } from 'optimizer';
 import { Toasts } from 'shared';
 
 import App from 'views/App';
@@ -31,18 +32,20 @@ loadFonts().then(() => {
       >
         <MultisessionAppSupport>
           <AnalyticsProvider>
-            <ApolloProvider client={client}>
-              <StoreProvider store={store}>
-                <BrowserRouter>
-                  <Tooltip.Provider delayDuration={500}>
-                    <ErrorBoundary>
-                      <App />
-                    </ErrorBoundary>
-                    <Toasts />
-                  </Tooltip.Provider>
-                </BrowserRouter>
-              </StoreProvider>
-            </ApolloProvider>
+            <OptimizerProvider>
+              <ApolloProvider client={client}>
+                <StoreProvider store={store}>
+                  <BrowserRouter>
+                    <Tooltip.Provider delayDuration={500}>
+                      <ErrorBoundary>
+                        <App />
+                      </ErrorBoundary>
+                      <Toasts />
+                    </Tooltip.Provider>
+                  </BrowserRouter>
+                </StoreProvider>
+              </ApolloProvider>
+            </OptimizerProvider>
           </AnalyticsProvider>
         </MultisessionAppSupport>
       </ClerkProvider>

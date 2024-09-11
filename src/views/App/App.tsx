@@ -1,27 +1,27 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  SignIn,
   OrganizationList,
   OrganizationSwitcher,
-  UserButton,
+  SignIn,
   useAuth,
+  UserButton,
   useUser,
 } from '@clerk/clerk-react';
-import { StatsigProvider } from 'statsig-react';
 import axios from 'axios';
 
-import { environment, isTest } from 'env';
-
-import { Loader, RoutesLoader } from 'shared';
 import { useAnalytics } from 'analytics';
+import { useOptimizerUser } from 'optimizer';
+import { Loader, RoutesLoader } from 'shared';
 
 import routes from './routes';
 
 import { Container } from './App.styles';
 
 const App: React.FC<{}> = () => {
-  const { anonymousId, identify } = useAnalytics();
+  const { identify } = useAnalytics();
+
+  const { updateOptimizerUser } = useOptimizerUser();
 
   const { orgId, isLoaded, signOut } = useAuth();
   const { user } = useUser();
@@ -45,6 +45,11 @@ const App: React.FC<{}> = () => {
     identify(user, orgId);
   }, [identify, user, orgId]);
 
+  useEffect(() => {
+    updateOptimizerUser(user, orgId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, orgId]);
+
   if (!user && isLoaded) {
     return <SignIn />;
   }
@@ -57,36 +62,8 @@ const App: React.FC<{}> = () => {
     <Container>
       <UserButton />
       <OrganizationSwitcher hidePersonal />
-      <StatsigProvider
-        sdkKey={import.meta.env.VITE_STATSIG_KEY}
-        waitForInitialization={isTest ? false : true}
-        initializingComponent={<Loader />}
-        options={{
-          // Checking for undefined because we don't allow loading segment in development
-          overrideStableID: anonymousId ? `${anonymousId}` : undefined,
-          environment: {
-            tier: environment,
-          },
-          disableAutoMetricsLogging: true,
-          disableCurrentPageLogging: true,
-          disableDiagnosticsLogging: true,
-          disableErrorLogging: true,
-        }}
-        user={{
-          userID: user?.id,
-          email: user?.primaryEmailAddress?.emailAddress
-            ? user.primaryEmailAddress.emailAddress
-            : undefined,
-          customIDs: {
-            ...(user && {
-              orgID: orgId ? orgId : undefined,
-            }),
-          },
-        }}
-      >
-        <Link to="/">Home</Link>
-        {isLoaded && <RoutesLoader fallback={<Loader />} routes={routes} />}
-      </StatsigProvider>
+      <Link to="/">Home</Link>
+      {isLoaded && <RoutesLoader fallback={<Loader />} routes={routes} />}
     </Container>
   );
 };

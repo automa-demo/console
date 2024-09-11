@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Flex, useExperiment, useGate } from 'shared';
 import { useAnalytics } from 'analytics';
+import { Flex, useExperiment, useGate } from 'shared';
 
 import { HomeProps } from './types';
 

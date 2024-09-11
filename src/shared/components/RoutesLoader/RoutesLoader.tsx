@@ -1,6 +1,6 @@
 import React, { Suspense, useCallback, useEffect } from 'react';
-import { Routes, Route, useLocation, matchRoutes } from 'react-router-dom';
-import { Statsig } from 'statsig-react';
+import { matchRoutes, Route, Routes, useLocation } from 'react-router-dom';
+import { useStatsigClient } from '@statsig/react-bindings';
 
 import { RoutesLoaderProps } from './types';
 
@@ -9,6 +9,10 @@ const RoutesLoader: React.FC<RoutesLoaderProps> = ({
   fallback = null,
   ...commonProps
 }) => {
+  const {
+    client: { checkGate },
+  } = useStatsigClient();
+
   const location = useLocation();
 
   useEffect(() => {
@@ -24,7 +28,7 @@ const RoutesLoader: React.FC<RoutesLoaderProps> = ({
       }
 
       return routes
-        .filter(({ gate }) => !gate || Statsig.checkGate(gate))
+        .filter(({ gate }) => !gate || checkGate(gate))
         .map(({ path, Component, props, children }, index) => (
           <Route
             key={index}
