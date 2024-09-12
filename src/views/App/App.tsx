@@ -32,14 +32,13 @@ const App: React.FC<{}> = () => {
       return null;
     }
 
-    sessionUser.externalAccounts.forEach((account) => {
-      if (account.verification) {
-        account.verification.expireAt = null;
-      }
-    });
     sessionUser.emailAddresses.forEach(
       (email) => (email.verification.expireAt = null),
     );
+
+    if (sessionUser.primaryEmailAddress) {
+      sessionUser.primaryEmailAddress.verification.expireAt = null;
+    }
 
     return {
       ...sessionUser,
@@ -62,6 +61,7 @@ const App: React.FC<{}> = () => {
   }, [signOut]);
 
   useEffect(() => {
+    console.log(JSON.stringify(user));
     identify(user, orgId);
   }, [identify, user, orgId]);
 

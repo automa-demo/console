@@ -5,11 +5,11 @@ import { useStatsigUser } from '@statsig/react-bindings';
 type User = NonNullable<ReturnType<typeof useUser>['user']>;
 
 const useOptimizerUser = () => {
-  const { user: optimizerUser, updateUserSync } = useStatsigUser();
+  const { user: optimizerUser, updateUserAsync } = useStatsigUser();
 
   const updateOptimizerUser = useCallback(
     (user: User | null | undefined, orgId: string | null | undefined) => {
-      updateUserSync({
+      updateUserAsync({
         userID: user?.id,
         email: user?.primaryEmailAddress?.emailAddress
           ? user.primaryEmailAddress.emailAddress
@@ -22,7 +22,7 @@ const useOptimizerUser = () => {
         },
       });
     },
-    [updateUserSync, optimizerUser],
+    [updateUserAsync, optimizerUser],
   );
 
   return { updateOptimizerUser };
