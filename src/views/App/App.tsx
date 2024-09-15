@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   OrganizationList,
   OrganizationSwitcher,
@@ -12,7 +12,7 @@ import axios from 'axios';
 
 import { useAnalytics } from 'analytics';
 import { useOptimizerUser } from 'optimizer';
-import { Loader, RoutesLoader } from 'shared';
+import { Loader, RoutesLoader, useRelativeMatch } from 'shared';
 
 import routes from './routes';
 
@@ -24,26 +24,11 @@ const App: React.FC<{}> = () => {
   const { updateOptimizerUser } = useOptimizerUser();
 
   const { orgId, isLoaded, signOut } = useAuth();
-  const { user: sessionUser } = useUser();
+  const { user } = useUser();
 
-  // Fix to make sure clerk user is not always reloaded
-  const user = useMemo(() => {
-    if (!sessionUser) {
-      return null;
-    }
+  const navigate = useNavigate();
 
-    sessionUser.emailAddresses.forEach(
-      (email) => (email.verification.expireAt = null),
-    );
-
-    if (sessionUser.primaryEmailAddress) {
-      sessionUser.primaryEmailAddress.verification.expireAt = null;
-    }
-
-    return {
-      ...sessionUser,
-    };
-  }, [sessionUser]);
+  const isAuthLoginView = useRelativeMatch('/auth/login');
 
   useEffect(() => {
     const interceptor = axios.interceptors.response.use(
@@ -61,16 +46,22 @@ const App: React.FC<{}> = () => {
   }, [signOut]);
 
   useEffect(() => {
-    console.log(JSON.stringify(user));
-    identify(user, orgId);
-  }, [identify, user, orgId]);
+    if (!user && isLoaded) {
+      navigate('/auth/login');
+    }
+  }, [user, isLoaded, navigate]);
 
   useEffect(() => {
-    updateOptimizerUser(user, orgId);
+    identify(user?.id, user?.primaryEmailAddress?.emailAddress, orgId);
+    updateOptimizerUser(
+      user?.id,
+      user?.primaryEmailAddress?.emailAddress,
+      orgId,
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, orgId]);
+  }, [user?.id, user?.primaryEmailAddress?.emailAddress, orgId]);
 
-  if (!user && isLoaded) {
+  if (isAuthLoginView) {
     return <SignIn />;
   }
 
@@ -80,7 +71,7 @@ const App: React.FC<{}> = () => {
 
   return (
     <Container>
-      <UserButton />
+      <UserButton signInUrl="/auth/login" />
       <OrganizationSwitcher hidePersonal />
       <Link to="/">Home</Link>
       {isLoaded && <RoutesLoader fallback={<Loader />} routes={routes} />}

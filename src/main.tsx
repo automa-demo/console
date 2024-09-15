@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { Provider as StoreProvider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { ApolloProvider } from '@apollo/client';
-import { ClerkProvider, MultisessionAppSupport } from '@clerk/clerk-react';
+import { ClerkProvider } from '@clerk/clerk-react';
 import * as Tooltip from '@radix-ui/react-tooltip';
 
 import 'index.css';
@@ -29,25 +29,24 @@ loadFonts().then(() => {
     <React.StrictMode>
       <ClerkProvider
         publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}
+        telemetry={false}
       >
-        <MultisessionAppSupport>
-          <AnalyticsProvider>
-            <OptimizerProvider>
-              <ApolloProvider client={client}>
-                <StoreProvider store={store}>
-                  <BrowserRouter>
-                    <Tooltip.Provider delayDuration={500}>
-                      <ErrorBoundary>
-                        <App />
-                      </ErrorBoundary>
-                      <Toasts />
-                    </Tooltip.Provider>
-                  </BrowserRouter>
-                </StoreProvider>
-              </ApolloProvider>
-            </OptimizerProvider>
-          </AnalyticsProvider>
-        </MultisessionAppSupport>
+        <AnalyticsProvider>
+          <OptimizerProvider>
+            <ApolloProvider client={client}>
+              <StoreProvider store={store}>
+                <BrowserRouter>
+                  <Tooltip.Provider delayDuration={500}>
+                    <ErrorBoundary>
+                      <App />
+                    </ErrorBoundary>
+                    <Toasts />
+                  </Tooltip.Provider>
+                </BrowserRouter>
+              </StoreProvider>
+            </ApolloProvider>
+          </OptimizerProvider>
+        </AnalyticsProvider>
       </ClerkProvider>
     </React.StrictMode>,
   );

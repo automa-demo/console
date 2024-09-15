@@ -1,12 +1,10 @@
 import { useCallback } from 'react';
-import { useAuth, useUser } from '@clerk/clerk-react';
+import { useAuth } from '@clerk/clerk-react';
 import { EventProperties } from '@segment/analytics-next';
 
 import { environment } from 'env';
 
 import useAnalyticsContext from './useAnalyticsContext';
-
-type User = NonNullable<ReturnType<typeof useUser>['user']>;
 
 const useAnalytics = () => {
   const { orgId } = useAuth();
@@ -14,15 +12,17 @@ const useAnalytics = () => {
   const { analytics, anonymousId } = useAnalyticsContext();
 
   const identify = useCallback(
-    (user: User | null | undefined, orgId: string | null | undefined) => {
-      if (!user || !orgId) {
+    (
+      userId: string | null | undefined,
+      emailAddress: string | null | undefined,
+      orgId: string | null | undefined,
+    ) => {
+      if (!userId || !emailAddress || !orgId) {
         return;
       }
 
-      analytics.identify(user.id, {
-        email: user.emailAddresses.find(
-          (e) => e.emailAddress === user!.primaryEmailAddressId,
-        )?.emailAddress,
+      analytics.identify(userId, {
+        email: emailAddress,
       });
 
       analytics.group(
