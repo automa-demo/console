@@ -1,7 +1,7 @@
 name: Deploy Production
 on:
   push:
-    branches: [production]
+    branches: [ production ]
     paths:
       - .github/workflows/deploy-production.yml
       - public/**
@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   deploy-production:
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2204
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -63,6 +63,6 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.PRODUCTION_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.PRODUCTION_AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.PRODUCTION_AWS_REGION }}
-        run: aws cloudfront create-invalidation
-          --distribution-id ${{ secrets.PRODUCTION_AWS_CLOUDFRONT_DISTRIBUTION }}
-          --paths '/index.html'
+        run: aws cloudfront create-invalidation --distribution-id ${{
+          secrets.PRODUCTION_AWS_CLOUDFRONT_DISTRIBUTION }} --paths
+          '/index.html'
