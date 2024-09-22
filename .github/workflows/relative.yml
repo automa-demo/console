@@ -1,7 +1,7 @@
 name: RelativeCI
 on:
   push:
-    branches: [master]
+    branches: [ master ]
     paths:
       - .github/workflows/relative.yml
       - public/**
@@ -11,7 +11,7 @@ on:
       - tailwind.config.ts
       - pnpm-lock.yaml
   pull_request:
-    branches: [master]
+    branches: [ master ]
     paths:
       - .github/workflows/relative.yml
       - public/**
@@ -21,7 +21,8 @@ on:
       - tailwind.config.ts
       - pnpm-lock.yaml
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name == 'push' && github.run_number }}
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name == 'push'
+    && github.run_number }}
   cancel-in-progress: true
 jobs:
   relative:
