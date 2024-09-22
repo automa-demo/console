@@ -1,7 +1,7 @@
 name: Testing
 on:
   pull_request:
-    branches: [master]
+    branches: [ master ]
     paths:
       - .github/workflows/test.yml
       - src/**
@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2204
     steps:
       - name: Checkout
         uses: actions/checkout@v4
