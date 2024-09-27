@@ -1,7 +1,7 @@
 name: Deploy Staging
 on:
   push:
-    branches: [master]
+    branches: [ master ]
     paths:
       - .github/workflows/deploy-staging.yml
       - public/**
@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   deploy-staging:
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2204
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -63,6 +63,5 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.STAGING_AWS_REGION }}
-        run: aws cloudfront create-invalidation
-          --distribution-id ${{ secrets.STAGING_AWS_CLOUDFRONT_DISTRIBUTION }}
-          --paths '/index.html'
+        run: aws cloudfront create-invalidation --distribution-id ${{
+          secrets.STAGING_AWS_CLOUDFRONT_DISTRIBUTION }} --paths '/index.html'
